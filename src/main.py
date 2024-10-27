@@ -10,7 +10,9 @@ from implex import greedy, dp
 
 def generatePrices(fim, seed):
     random.seed(seed)
-    return sorted(random.randint(1, fim + 1) for _ in range(fim))
+    pricesList = sorted(random.randint(1, fim + 1) for _ in range(fim))
+    pricesTable = { i: pricesList[i - 1] for i in range(1, fim + 1) }
+    return pricesTable
 
 def main(inc, fim, stp, seed):
     data = {}
