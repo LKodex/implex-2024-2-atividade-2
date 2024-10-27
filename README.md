@@ -7,3 +7,11 @@
 **Tecnologias:**  
 
 [<img heigth=64 width=64 src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" />](https://www.python.org/)  
+
+## Setup
+
+1. Crie e ative um [_virtual environment_](https://docs.python.org/3/library/venv.html)
+
+2. `pip install -r requirements.txt` para instalar as dependências
+
+3. `python3 src/main.py <inc> <fim> <stp> [seed]`
