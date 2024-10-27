@@ -4,7 +4,10 @@
 # Lucas Gonçalves Cordeiro (2021.1906.031-0)
 
 from sys import argv, exit, stderr
-from random import randrange, seed
+from random import randint, seed
+
+def generatePrices(fim):
+    return sorted(randint(1, fim + 1) for _ in range(fim))
 
 def main(inc, fim, stp, seed):
     pass
