@@ -4,13 +4,37 @@
 # Lucas Gonçalves Cordeiro (2021.1906.031-0)
 
 from sys import argv, exit, stderr
-from random import randint, seed
+import random
+import time
+from implex import greedy, dp
 
-def generatePrices(fim):
-    return sorted(randint(1, fim + 1) for _ in range(fim))
+def generatePrices(fim, seed):
+    random.seed(seed)
+    return sorted(random.randint(1, fim + 1) for _ in range(fim))
 
 def main(inc, fim, stp, seed):
-    pass
+    data = {}
+    priceTable = generatePrices(fim, seed)
+    for n in range(inc, fim + 1, stp):
+        dpData = timeTheAlgo(greedy.cutRodGreedy, "DP", priceTable, n)
+        greedyData = timeTheAlgo(dp.cutRodDP, "Greedy", priceTable, n)
+        greedyAccuracy = greedyData["vGreedy"] / dpData["vDP"]
+        greedyAccuracyRounded = round(greedyAccuracy * 100, 2)
+        data[n] = { "%": greedyAccuracyRounded }
+        data[n] |= dpData | greedyData
+    print(data)
+
+def timeTheAlgo(algorithm, label: str, *args) -> dict:
+    start = time.time()
+    data = algorithm(args[0], args[1])
+    end = time.time()
+
+    timeSpent = end - start
+
+    return {
+        f"v{label}": data,
+        f"t{label}": timeSpent,
+    }
 
 if __name__ == "__main__":
     if len(argv) < 4:
