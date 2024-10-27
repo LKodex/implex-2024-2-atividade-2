@@ -18,25 +18,26 @@ def main(inc, fim, stp, seed):
     data = {}
     priceTable = generatePrices(fim, seed)
     for n in range(inc, fim + 1, stp):
-        dpData = timeTheAlgo(greedy.cutRodGreedy, "DP", priceTable, n)
-        greedyData = timeTheAlgo(dp.cutRodDP, "Greedy", priceTable, n)
+        dpData = runAndTimeIt(greedy.cutRodGreedy, "DP", priceTable, n)
+        greedyData = runAndTimeIt(dp.cutRodDP, "Greedy", priceTable, n)
         greedyAccuracy = greedyData["vGreedy"] / dpData["vDP"]
         greedyAccuracyRounded = round(greedyAccuracy * 100, 2)
         data[n] = { "%": greedyAccuracyRounded }
         data[n] |= dpData | greedyData
     print(data)
 
-def timeTheAlgo(algorithm, label: str, *args) -> dict:
+def runAndTimeIt(algorithm, label: str, *args) -> dict:
     start = time.time()
     data = algorithm(args[0], args[1])
     end = time.time()
 
     timeSpent = end - start
-
-    return {
-        f"v{label}": data,
-        f"t{label}": timeSpent,
+    algorithmData = {
+        f"v{label}": data, # data returned by the algorithm
+        f"t{label}": timeSpent, # seconds the algorithm took to run
     }
+
+    return algorithmData
 
 if __name__ == "__main__":
     if len(argv) < 4:
