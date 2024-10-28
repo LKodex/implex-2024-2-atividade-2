@@ -1,28 +1,42 @@
 #!/usr/bin/env python3
 
-# José Vitor Oda Pires (2020.1906.049-0)
-# Lucas Gonçalves Cordeiro (2021.1906.031-0)
-
 from sys import argv, exit, stderr
 import random
 import time
-from implex import greedy, dp
+from implex import greedy, dp, data_analysis
 
 def generatePrices(fim, seed):
     random.seed(seed)
     return sorted(random.randint(1, fim + 1) for _ in range(fim))
 
 def main(inc, fim, stp, seed):
-    data = {}
+    results = {
+        'n': [],
+        'vDP': [],
+        'tDP': [],
+        'vGreedy': [],
+        'tGreedy': [],
+        '%': []
+    }
+    
     priceTable = generatePrices(fim, seed)
+    
     for n in range(inc, fim + 1, stp):
-        dpData = timeTheAlgo(greedy.cutRodGreedy, "DP", priceTable, n)
-        greedyData = timeTheAlgo(dp.cutRodDP, "Greedy", priceTable, n)
+        dpData = timeTheAlgo(dp.cutRodDP, "DP", priceTable, n)
+        greedyData = timeTheAlgo(greedy.cutRodGreedy, "Greedy", priceTable, n)
         greedyAccuracy = greedyData["vGreedy"] / dpData["vDP"]
         greedyAccuracyRounded = round(greedyAccuracy * 100, 2)
-        data[n] = { "%": greedyAccuracyRounded }
-        data[n] |= dpData | greedyData
-    print(data)
+
+        # Armazenando os dados em 'results'
+        results['n'].append(n)
+        results['vDP'].append(dpData['vDP'])
+        results['tDP'].append(dpData['tDP'])
+        results['vGreedy'].append(greedyData['vGreedy'])
+        results['tGreedy'].append(greedyData['tGreedy'])
+        results['%'].append(greedyAccuracyRounded)
+    
+    # Passando os resultados para a função de geração de gráficos
+    data_analysis.generate_plots(results)
 
 def timeTheAlgo(algorithm, label: str, *args) -> dict:
     start = time.time()
