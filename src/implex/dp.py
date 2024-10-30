@@ -1,14 +1,11 @@
-def cutRodDP(prices, n):
-    # Criando a tabela para armazenar os valores máximos de venda
-    max_val = [0] * (n + 1)
-    
-    # Para cada comprimento da tora de 1 até n
-    for i in range(1, n + 1):
-        max_price = -1
-        # Para cada corte possível da tora
-        for j in range(1, i + 1):
-            # Calcula o valor máximo ao tentar cortar em tamanhos diferentes
-            max_price = max(max_price, prices[j] + max_val[i - j])
-        max_val[i] = max_price
-    
-    return max_val[n]
+def dynamicProgramming(prices, n):
+    maxValue = { 0: 0 }
+    for logSize in range(1, n + 1):
+        maxPrice = 0
+
+        for cutSize in range(1, logSize + 1):
+            remainingLogSize = logSize - cutSize
+            cutPrice = prices[cutSize] + maxValue[remainingLogSize]
+            maxPrice = max(maxPrice, cutPrice)
+        maxValue[logSize] = maxPrice
+    return maxValue[n]

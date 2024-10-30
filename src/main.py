@@ -24,8 +24,8 @@ def main(inc, fim, stp, seed):
     priceTable = generatePrices(fim, seed)
     
     for n in range(inc, fim + 1, stp):
-        dpData = runAndTimeIt(greedy.cutRodDP, "DP", priceTable, n)
-        greedyData = runAndTimeIt(dp.cutRodGreedy, "Greedy", priceTable, n)
+        dpData = runAndTimeIt(dp.dynamicProgramming, "DP", priceTable, n)
+        greedyData = runAndTimeIt(greedy.greedy, "Greedy", priceTable, n)
         greedyAccuracy = greedyData["vGreedy"] / dpData["vDP"]
         greedyAccuracyRounded = round(greedyAccuracy * 100, 2)
 
