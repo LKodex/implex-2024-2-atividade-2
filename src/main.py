@@ -3,7 +3,7 @@
 from sys import argv, exit, stderr
 import random
 import time
-from implex import greedy, dp, data_analysis
+from implex import greedy, dp, data_analysis, table_print
 
 def generatePrices(fim, seed):
     random.seed(seed)
@@ -24,17 +24,22 @@ def main(inc, fim, stp, seed):
     for n in range(inc, fim + 1, stp):
         dpData = timeTheAlgo(dp.cutRodDP, "DP", priceTable, n)
         greedyData = timeTheAlgo(greedy.cutRodGreedy, "Greedy", priceTable, n)
+
+        dpTimingFormatted = round(dpData["tDP"], 6)
+        greedyTimingFormatted = round(greedyData["tGreedy"], 6)
+
         greedyAccuracy = greedyData["vGreedy"] / dpData["vDP"]
         greedyAccuracyRounded = round(greedyAccuracy * 100, 2)
 
         # Armazenando os dados em 'results'
         results['n'].append(n)
         results['vDP'].append(dpData['vDP'])
-        results['tDP'].append(dpData['tDP'])
+        results['tDP'].append(dpTimingFormatted)
         results['vGreedy'].append(greedyData['vGreedy'])
-        results['tGreedy'].append(greedyData['tGreedy'])
+        results['tGreedy'].append(greedyTimingFormatted)
         results['%'].append(greedyAccuracyRounded)
     
+    table_print.printTable(results)
     # Passando os resultados para a função de geração de gráficos
     data_analysis.generate_plots(results)
 
