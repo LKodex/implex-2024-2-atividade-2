@@ -7,7 +7,9 @@ from implex import greedy, dp, data_analysis
 
 def generatePrices(fim, seed):
     random.seed(seed)
-    return sorted(random.randint(1, fim + 1) for _ in range(fim))
+    pricesList = sorted(random.randint(1, fim + 1) for _ in range(fim))
+    pricesTable = { i: pricesList[i - 1] for i in range(1, fim + 1) }
+    return pricesTable
 
 def main(inc, fim, stp, seed):
     results = {
@@ -22,8 +24,8 @@ def main(inc, fim, stp, seed):
     priceTable = generatePrices(fim, seed)
     
     for n in range(inc, fim + 1, stp):
-        dpData = timeTheAlgo(dp.cutRodDP, "DP", priceTable, n)
-        greedyData = timeTheAlgo(greedy.cutRodGreedy, "Greedy", priceTable, n)
+        dpData = runAndTimeIt(dp.dynamicProgramming, "DP", priceTable, n)
+        greedyData = runAndTimeIt(greedy.greedy, "Greedy", priceTable, n)
         greedyAccuracy = greedyData["vGreedy"] / dpData["vDP"]
         greedyAccuracyRounded = round(greedyAccuracy * 100, 2)
 
@@ -38,17 +40,18 @@ def main(inc, fim, stp, seed):
     # Passando os resultados para a função de geração de gráficos
     data_analysis.generate_plots(results)
 
-def timeTheAlgo(algorithm, label: str, *args) -> dict:
+def runAndTimeIt(algorithm, label: str, *args) -> dict:
     start = time.time()
     data = algorithm(args[0], args[1])
     end = time.time()
 
     timeSpent = end - start
-
-    return {
-        f"v{label}": data,
-        f"t{label}": timeSpent,
+    algorithmData = {
+        f"v{label}": data, # data returned by the algorithm
+        f"t{label}": timeSpent, # seconds the algorithm took to run
     }
+
+    return algorithmData
 
 if __name__ == "__main__":
     if len(argv) < 4:
