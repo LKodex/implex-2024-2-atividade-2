@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
+import time
 
-def plot_value_comparison(results):
+def plot_value_comparison(results, filePrefix=""):
     n = results['n']
     vDP = results['vDP']
     vGreedy = results['vGreedy']
@@ -13,9 +14,9 @@ def plot_value_comparison(results):
     plt.title('Comparação: Valor Total de Venda (DP vs Greedy)')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.savefig(f"{filePrefix}-value_comparison.png")
 
-def plot_time_comparison(results):
+def plot_time_comparison(results, filePrefix=""):
     n = results['n']
     tDP = results['tDP']
     tGreedy = results['tGreedy']
@@ -28,8 +29,9 @@ def plot_time_comparison(results):
     plt.title('Comparação: Tempo de Execução (DP vs Greedy)')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.savefig(f"{filePrefix}-time_comparison.png")
 
 def generate_plots(results):
-    plot_value_comparison(results)
-    plot_time_comparison(results)
+    now = "-".join(map(str, time.localtime()[:6]))
+    plot_value_comparison(results, now)
+    plot_time_comparison(results, now)
