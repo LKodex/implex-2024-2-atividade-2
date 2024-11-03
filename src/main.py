@@ -3,6 +3,7 @@
 from sys import argv, exit, stderr
 import random
 import time
+import hashlib
 from implex import greedy, dp, data_analysis, table_print
 
 def generatePrices(fim, seed):
@@ -57,6 +58,12 @@ def runAndTimeIt(algorithm, label: str, *args) -> dict:
 
     return algorithmData
 
+def generateRandomSeed() -> str:
+    now = str(time.time())
+    nowEncoded = now.encode()
+    timeHash = hashlib.sha3_512(nowEncoded).hexdigest()
+    return timeHash
+
 if __name__ == "__main__":
     if len(argv) < 4:
         programName = argv[0]
@@ -71,5 +78,6 @@ if __name__ == "__main__":
         errorMessage = f"Could not convert parameters to an integer.\nException: {e}"
         print(errorMessage, file=stderr)
         exit(1)
-    seed = argv[4] if len(argv) > 4 else "randomSeed"
+    seed = argv[4] if len(argv) > 4 else generateRandomSeed()
+    print(f"Seed set = {seed}")
     main(inc, fim, stp, seed)
